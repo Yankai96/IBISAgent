@@ -10,7 +10,7 @@
 
 - **Authors**: Yankai Jiang, Qiaoru Li, Binlu Xu, Haoran Sun, Chao Ding, Junting Dong, [Yuxiang Cai](mailto:caiyuxiang@zju.edu.cn)📧, Xuhong Zhang, Jianwei Yin
 - **Institutes**: Zhejiang University; Shanghai AI Laboratory
-- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [🤗[Huggingface](https://huggingface.co/manglu3935/IBIS)]
+- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [🤗[Huggingface](https://huggingface.co/manglu3935/IBIS/tree/main)]
 
 ## 📖 Introduction
 
@@ -33,6 +33,10 @@ By treating segmentation tools (e.g., MedSAM2) as plug-and-play modules controll
 - 🔥 **SOTA Performance.** IBISAgent significantly outperforms existing medical MLLMs on both in-domain and out-of-domain benchmarks, demonstrating superior robustness and pixel-level reasoning ability.
 
 ![IBISAgent Performance](assets/table.jpg)
+
+## Model Weights
+
+Please check out our [Huggingface repository](https://huggingface.co/manglu3935/IBIS/tree/main) for the pre-trained model weights.
 
 ## 📜 News
 
