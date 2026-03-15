@@ -10,7 +10,7 @@
 
 - **Authors**: Yankai Jiang, Qiaoru Li, Binlu Xu, Haoran Sun, Chao Ding, Junting Dong, [Yuxiang Cai](mailto:caiyuxiang@zju.edu.cn)📧, Xuhong Zhang, Jianwei Yin
 - **Institutes**: Zhejiang University; Shanghai AI Laboratory
-- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [🤗Huggingface]
+- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [🤗[Huggingface](https://huggingface.co/manglu3935/IBIS)]
 
 ## 📖 Introduction
 
@@ -43,12 +43,12 @@ By treating segmentation tools (e.g., MedSAM2) as plug-and-play modules controll
 
 - [x] Release training scripts (SFT & RL)
 - [ ] Release inference code
-- [ ] Release pre-trained model weights
+- [x] Release pre-trained model weights
 - [ ] Release **Cold-Start** and **RL** datasets
 
 ## ✒️ Citation
 
-If you find our work helpful for your research, please consider citing:
+If you find our work helpful for your research, please consider giving one star ⭐️ and citing:
 
 ```bibtex
 @inproceedings{jiang2026ibisagent,
