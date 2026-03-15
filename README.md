@@ -10,7 +10,7 @@
 
 - **Authors**: Yankai Jiang, Qiaoru Li, Binlu Xu, Haoran Sun, Chao Ding, Junting Dong, [Yuxiang Cai](mailto:caiyuxiang@zju.edu.cn)📧, Xuhong Zhang, Jianwei Yin
 - **Institutes**: Zhejiang University; Shanghai AI Laboratory
-- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [[🤗Huggingface]()]
+- **Resources**: [📖[Paper](https://arxiv.org/abs/2601.03054)]  [🤗Huggingface]
 
 ## 📖 Introduction
 
