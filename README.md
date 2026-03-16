@@ -49,15 +49,7 @@ conda activate ibisagent
 pip install -r infer/requirements.txt
 ```
 
-2. Install `sam2` python library from the [official repo](https://github.com/facebookresearch/sam2).
-
-```batch
-git clone https://github.com/facebookresearch/sam2.git
-cd sam2
-pip install -e .
-```
-
-3. Download our RL-trained model weights to `infer/models/mllm` from [here](https://huggingface.co/manglu3935/IBIS/tree/main/qwen2_5vl-7b-RL).
+2. Download our RL-trained model weights to `infer/models/mllm` from [here](https://huggingface.co/manglu3935/IBIS/tree/main/qwen2_5vl-7b-RL).
 
 ```bash
 huggingface-cli download manglu3935/IBIS \
@@ -66,22 +58,23 @@ huggingface-cli download manglu3935/IBIS \
     --local-dir-use-symlinks False
 ```
 
-4. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
+3. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
 
 ```bash
-huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
+huggingface-cli download wanglab/MedSAM2 MedSAM2_latest.pt \
     --local-dir infer/models/sam2 \
     --local-dir-use-symlinks False
 ```
 
-5. Run the multi-turn inference script.
+4. Run the multi-turn inference script.
 
 ```bash
 python infer/multi_turn.py \
     --image "infer/test_img.png" \
     --prompt "Can you find a liver in this image?" \
     --mllm_path "infer/models/mllm" \
-    --sam2_path "infer/models/sam2"
+    --sam2_cfg "infer/models/sam2/medsam2_cfg.yaml" \
+    --sam2_ckpt "infer/models/sam2/MedSAM2_latest.pt"
 ```
 
 Parameters:
@@ -91,7 +84,8 @@ Parameters:
 | `--image` | Path to the input medical image | `None` | Yes |
 | `--prompt` | User text prompt (e.g., 'Is there a colon tumor?') | `None` | Yes |
 | `--mllm_path` | Path to the MLLM model | `infer/models/mllm` | No |
-| `--sam2_path` | Path to the SAM2 model | `infer/models/sam2` | No |
+| `--sam2_cfg` | Path to the MedSAM2 config file | `infer/models/sam2/medsam2_cfg.yaml` | No |
+| `--sam2_ckpt` | Path to the MedSAM2 checkpoint | `infer/models/sam2/MedSAM2_latest.pt` | No |
 | `--max_turns` | Maximum number of iterations | `20` | No |
 | `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
 | `--output_dir` | Directory to save results | `./outputs` | No |

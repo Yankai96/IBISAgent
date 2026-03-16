@@ -1,15 +1,40 @@
 import torch
 import numpy as np
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
 from PIL import Image
 from sam2.sam2_image_predictor import SAM2ImagePredictor
+from hydra.utils import instantiate
+from omegaconf import OmegaConf
 
 class SAM2Engine:
-    def __init__(self, model_path="facebook/sam2-hiera-large", device=None):
+    def __init__(self, model_cfg="infer/models/sam2/medsam2_cfg.yaml", checkpoint_path="infer/models/sam2/MedSAM2_latest.pt", device=None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"[SAM2Engine] Loading SAM2 model from {model_path} to {self.device}...")
-        self.predictor = SAM2ImagePredictor.from_pretrained(model_path, device=self.device)
+        print(f"[SAM2Engine] Building MedSAM2 model from cfg: {model_cfg}...")
+        
+        cfg = OmegaConf.load(model_cfg)
+        
+        sam2_model = instantiate(cfg.model)
+        
+        print(f"[SAM2Engine] Loading checkpoint from: {checkpoint_path}...")
+        state_dict = torch.load(checkpoint_path, map_location=self.device)
+        
+        if "model" in state_dict:
+            state_dict = state_dict["model"]
+            
+        sam2_model.load_state_dict(state_dict)
+        sam2_model.to(device=self.device)
+        sam2_model.eval() 
+        
+        self.predictor = SAM2ImagePredictor(sam2_model)
+        
         self.reset()
-        print("[SAM2Engine] Model loaded successfully.")
+        print("[SAM2Engine] Model and Checkpoint loaded successfully.")
 
     def reset(self):
         """重置状态，清空历史点击和掩码"""
