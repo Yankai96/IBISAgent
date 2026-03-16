@@ -36,7 +36,52 @@ By treating segmentation tools (e.g., MedSAM2) as plug-and-play modules controll
 
 ## Model Weights
 
-Please check out our [Huggingface repository](https://huggingface.co/manglu3935/IBIS/tree/main) for the pre-trained model weights.
+Please refer to our [Huggingface repository](https://huggingface.co/manglu3935/IBIS/tree/main) for the pre-trained model weights.
+
+## 🖥️ Environment Setup
+
+
+
+## 🤖 Inference
+
+1. Download our RL-trained model weights to `infer/models/mllm` from [here](https://huggingface.co/manglu3935/IBIS/tree/main/qwen2_5vl-7b-RL).
+
+```bash
+huggingface-cli download manglu3935/IBIS \
+    --include "qwen2_5vl-7b-RL/*" \
+    --local-dir infer/models/mllm \
+    --local-dir-use-symlinks False
+```
+
+2. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
+
+```bash
+huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
+    --local-dir infer/models/sam2 \
+    --local-dir-use-symlinks False
+```
+
+3. Run the multi-turn inference script.
+
+```bash
+python infer/multi_turn.py \
+    --image "infer/test_img.png" \
+    --prompt "Can you find a liver in this image?" \
+    --mllm_path "infer/models/mllm" \
+    --sam2_path "infer/models/sam2"
+```
+
+Parameters:
+
+| Parameter | Description | Default | Required |
+| --------- | ----------- | ------- | -------- |
+| `--image` | Path to the input medical image | `None` | Yes |
+| `--prompt` | User text prompt (e.g., 'Is there a colon tumor?') | `None` | Yes |
+| `--mllm_path` | Path to the MLLM model | `infer/models/mllm` | No |
+| `--sam2_path` | Path to the SAM2 model | `infer/models/sam2` | No |
+| `--max_turns` | Maximum number of iterations | `20` | No |
+| `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
+| `--output_dir` | Directory to save results | `./outputs` | No |
 
 ## 📜 News
 
