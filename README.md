@@ -38,13 +38,26 @@ By treating segmentation tools (e.g., MedSAM2) as plug-and-play modules controll
 
 Please refer to our [Huggingface repository](https://huggingface.co/manglu3935/IBIS/tree/main) for the pre-trained model weights.
 
-## 🖥️ Environment Setup
-
-
 
 ## 🤖 Inference
 
-1. Download our RL-trained model weights to `infer/models/mllm` from [here](https://huggingface.co/manglu3935/IBIS/tree/main/qwen2_5vl-7b-RL).
+1. Create a new conda environment and install the required packages.
+
+```bash
+conda create -n ibisagent python=3.12
+conda activate ibisagent
+pip install -r infer/requirements.txt
+```
+
+2. Install `sam2` python library from the [official repo](https://github.com/facebookresearch/sam2).
+
+```batch
+git clone https://github.com/facebookresearch/sam2.git
+cd sam2
+pip install -e .
+```
+
+3. Download our RL-trained model weights to `infer/models/mllm` from [here](https://huggingface.co/manglu3935/IBIS/tree/main/qwen2_5vl-7b-RL).
 
 ```bash
 huggingface-cli download manglu3935/IBIS \
@@ -53,7 +66,7 @@ huggingface-cli download manglu3935/IBIS \
     --local-dir-use-symlinks False
 ```
 
-2. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
+4. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
 
 ```bash
 huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
@@ -61,7 +74,7 @@ huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
     --local-dir-use-symlinks False
 ```
 
-3. Run the multi-turn inference script.
+5. Run the multi-turn inference script.
 
 ```bash
 python infer/multi_turn.py \
@@ -91,7 +104,7 @@ Parameters:
 ## 👨‍💻 Todo
 
 - [x] Release training scripts (SFT & RL)
-- [ ] Release inference code
+- [x] Release inference code
 - [x] Release pre-trained model weights
 - [ ] Release **Cold-Start** and **RL** datasets
 
