@@ -41,6 +41,8 @@ Please refer to our [Huggingface repository](https://huggingface.co/manglu3935/I
 
 ## 🤖 Inference
 
+Taking the example of [SAM2](https://github.com/facebookresearch/sam2) as the segmentation tool, we provide the inference code for IBISAgent.
+
 1. Create a new conda environment and install the required packages.
 
 ```bash
@@ -66,15 +68,7 @@ huggingface-cli download manglu3935/IBIS \
     --local-dir-use-symlinks False
 ```
 
-4. Download MedSAM2 model weights to `infer/models/sam2` from [here](https://huggingface.co/wanglab/MedSAM2/tree/main).
-
-```bash
-huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
-    --local-dir infer/models/sam2 \
-    --local-dir-use-symlinks False
-```
-
-5. Run the multi-turn inference script.
+4. Run the multi-turn inference script.
 
 ```bash
 python infer/multi_turn.py \
