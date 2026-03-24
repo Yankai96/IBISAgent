@@ -88,7 +88,7 @@ Parameters:
 | `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
 | `--output_dir` | Directory to save results | `./outputs` | No |
 
-## 🔧 Build Your Own Data
+## 🔧 Build Your SFT Data
 
 Building the Supervised Fine-Tuning (SFT) data consists of two main parts:
 1. **Building Trajectory Data.** Generating simulated interactive point prompts using SAM2.
@@ -130,7 +130,37 @@ python trajectory_gen/run_tr_gen.py \
 
 The script will output a JSON file containing the file metadata and the generated sequence of steps, including the normalized coordinates of the simulated clicks and the RLE-compressed predicted masks at each step.
 
+**Note:** The RLE mask string can be converted into a binary mask image using the following code snippet:
 
+```python
+import numpy as np
+import base64
+import zlib
+
+def decode_rle_zlib_b64_to_mask(rle_b64_str: str, shape: tuple) -> np.ndarray:
+    """Decode a zlib-compressed base64 RLE string back to a binary mask."""
+    if not rle_b64_str:
+        return np.zeros(shape, dtype=np.uint8)
+        
+    compressed = base64.b64decode(rle_b64_str)
+    runs_str = zlib.decompress(compressed).decode('utf-8')
+    runs = np.array([int(x) for x in runs_str.split()])
+    
+    pixels = np.zeros(np.prod(shape), dtype=np.uint8)
+    
+    current_idx = 0
+    current_val = 0
+    for run in runs:
+        pixels[current_idx:current_idx + run] = current_val
+        current_idx += run
+        current_val = 1 - current_val  # Alternate between 0 and 1
+        
+    return pixels.reshape(shape)
+
+# Example usage:
+# shape = (512, 512) # Use the size from 'nii_data' or 'img_data' in the JSON
+# mask = decode_rle_zlib_b64_to_mask("eJxVUtuS2jAM/...", shape)
+```
 
 
 
