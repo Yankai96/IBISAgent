@@ -88,6 +88,52 @@ Parameters:
 | `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
 | `--output_dir` | Directory to save results | `./outputs` | No |
 
+## 🔧 Build Your Own Data
+
+Building the Supervised Fine-Tuning (SFT) data consists of two main parts:
+1. **Building Trajectory Data.** Generating simulated interactive point prompts using SAM2.
+2. **CoT Distillation.** Generating textual reasoning steps using a Teacher MLLM (Please refer to **Appendix B.3 Reasoning Generation for Our SFT Dataset** in our paper for details on this step).
+
+Here we provide the script and instructions for the **first part**: generating your own trajectory data for custom 2D images or 3D NIfTI volumes.
+
+### Generate Trajectories
+
+We provide a versatile script `trajectory_gen/run_tr_gen.py` to automatically generate high-quality interactive click trajectories. It simulates human-like iterative clicking behavior on your segmentation data.
+
+**For 2D Images (e.g., PNG, JPG)**
+```bash
+python trajectory_gen/run_tr_gen.py \
+    --type img \
+    --image /path/to/image.jpg \
+    --mask /path/to/mask.png \
+    --output /path/to/output.json \
+    --iou_threshold 0.8 \
+    --max_steps 20
+```
+*(Note: The script assumes white pixels (>128) in the mask represent the target. If your mask uses black for the target, add the `--reverse_mask` flag.)*
+
+**For 3D NIfTI Volumes**
+You can specify the slicing axis, slice index, mask label value, and optional windowing parameters for NIfTI data.
+```bash
+python trajectory_gen/run_tr_gen.py \
+    --type nii \
+    --image /path/to/volume.nii.gz \
+    --mask /path/to/segmentation.nii.gz \
+    --output /path/to/output.json \
+    --slice_axis z \
+    --slice_idx 55 \
+    --mask_value 2 \
+    --window_min -125 \
+    --window_max 1000 \
+    --iou_threshold 0.85
+```
+
+The script will output a JSON file containing the file metadata and the generated sequence of steps, including the normalized coordinates of the simulated clicks and the RLE-compressed predicted masks at each step.
+
+
+
+
+
 ## 📜 News
 
 - **[2026/02/28]** 🚀 Code and dataset release preparation.
@@ -116,4 +162,6 @@ If you find our work helpful for your research, please consider giving one star 
 ## ❤️ Acknowledgments
 
 - [VERL](https://github.com/volcengine/verl): The reinforcement learning framework we built upon.
+- [Qwen2.5-VL-7B](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct): The MLLM used in our agent.
+- [SAM2](https://github.com/facebookresearch/sam2): The segmentation tool used in our agent.
 - [MedSAM2](https://github.com/bowang-lab/MedSAM2): The segmentation tool used in our agent.
