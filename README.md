@@ -80,8 +80,7 @@ huggingface-cli download wanglab/MedSAM2 MedSAM2_2411.pt \
 python infer/multi_turn.py \
     --image "infer/test_img.png" \
     --prompt "Can you find a liver in this image?" \
-    --mllm_path "infer/models/mllm" \
-    --sam2_path "infer/models/sam2"
+    --mllm_path "infer/models/mllm"
 ```
 
 Parameters:
@@ -91,7 +90,6 @@ Parameters:
 | `--image` | Path to the input medical image | `None` | Yes |
 | `--prompt` | User text prompt (e.g., 'Is there a colon tumor?') | `None` | Yes |
 | `--mllm_path` | Path to the MLLM model | `infer/models/mllm` | No |
-| `--sam2_path` | Path to the SAM2 model | `infer/models/sam2` | No |
 | `--max_turns` | Maximum number of iterations | `20` | No |
 | `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
 | `--output_dir` | Directory to save results | `./outputs` | No |
