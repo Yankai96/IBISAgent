@@ -39,8 +39,7 @@ def main():
     parser.add_argument("--image", type=str, required=True, help="Path to the input medical image")
     parser.add_argument("--prompt", type=str, required=True, help="User text prompt, e.g., 'Is there a colon tumor in this image?'")
     parser.add_argument("--mllm_path", type=str, default="infer/models/mllm", help="Path to the Qwen2.5-VL model")
-    parser.add_argument("--sam2_cfg", type=str, default="infer/models/sam2/medsam2_cfg.yaml", help="Path to the MedSAM2 config file")
-    parser.add_argument("--sam2_ckpt", type=str, default="infer/models/sam2/MedSAM2_latest.pt", help="Path to the MedSAM2 checkpoint")
+    parser.add_argument("--sam2_path", type=str, default="infer/models/sam2", help="Path to the SAM2 model")
     parser.add_argument("--max_turns", type=int, default=20, help="Maximum number of iterations")
     parser.add_argument("--use_history", type=int, default=0, help="Whether to use chat history (1 for True, 0 for False). Default is False.")
     parser.add_argument("--output_dir", type=str, default="./outputs", help="Directory to save the step-by-step results")
@@ -55,7 +54,7 @@ def main():
     print("=" * 60)
     
     mllm = MLLMEngine(args.mllm_path)
-    sam2 = SAM2Engine(model_cfg=args.sam2_cfg, checkpoint_path=args.sam2_ckpt)
+    sam2 = SAM2Engine(args.sam2_path)
     
     original_image = Image.open(args.image).convert("RGB")
     sam2.set_image(original_image)
