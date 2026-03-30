@@ -88,6 +88,44 @@ Parameters:
 | `--use_history` | Whether to enable chat history (1 for True, 0 for False) | `0` | No |
 | `--output_dir` | Directory to save results | `./outputs` | No |
 
+## 🏋️ Training
+
+IBISAgent uses a two-stage training strategy: **Cold-Start SFT** followed by **Agentic Reinforcement Learning (GRPO)**.
+
+1. Create a new conda environment and install the required packages.
+
+```bash
+conda create -n ibisagent-train python=3.12
+conda activate ibisagent-train
+pip install -r requirements.txt
+```
+
+### Stage 1: Cold-Start SFT
+
+We use [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) for supervised fine-tuning with LoRA. The configuration file is provided at `training_scripts/qwen2_5vl_lora_sft.yaml`.
+
+1. Set up the dataset following the `dataset_info.json` format required by LLaMA-Factory, and update the `dataset` and `output_dir` fields in the config file.
+
+2. Specify the base model path in `model_name_or_path`.
+
+3. Run SFT training:
+
+```bash
+llamafactory-cli train training_scripts/qwen2_5vl_lora_sft.yaml
+```
+
+### Stage 2: Agentic Reinforcement Learning (GRPO)
+
+We use [VERL](https://github.com/volcengine/verl) for GRPO-based reinforcement learning. The training script is at `training_scripts/grpo.sh`.
+
+1. Prepare your training data in `.parquet` format and update the `data.train_files` and `data.val_files` paths in `training_scripts/grpo.sh`.
+
+3. Set the `model` variable to the path of your SFT-merged checkpoint, and run:
+
+```bash
+bash training_scripts/grpo.sh
+```
+
 ## 🔧 Build Your SFT Data
 
 Building the Supervised Fine-Tuning (SFT) data consists of two main parts:
@@ -163,6 +201,20 @@ def decode_rle_zlib_b64_to_mask(rle_b64_str: str, shape: tuple) -> np.ndarray:
 ```
 
 
+
+## 🔧 Build Your RL Data
+
+Once you have the trajectory JSON files (from the SFT data generation step above), use `trajectory_gen/convert_to_rl_data.py` to convert them into the `.parquet` format required by VERL for GRPO training.
+
+```bash
+python trajectory_gen/convert_to_rl_data.py \
+    --dataset your_dataset \
+    --data_root /path/to/med-seg-rl \
+    --output_root /path/to/output \
+    --split train
+```
+
+The output Parquet file will be saved to `{output_root}/{dataset}/{split}_rl.parquet`, which can be directly used as `data.train_files` in `training_scripts/grpo.sh`.
 
 ## 📜 News
 
